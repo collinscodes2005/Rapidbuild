@@ -41,14 +41,25 @@ const app = Vue.createApp({
         body: JSON.stringify({
           user_name: this.username,
           password: this.password,
+
         }),
       });
+
       const data = await res.json();
       // Check if login was successful
       if (data.success) {
         this.first_page = false;
         this.loggedIn = true;
         this.getUser(0);
+
+        // Store tokens in local storage
+        localStorage.setItem('access_token', data.access);
+        localStorage.setItem('refresh_token', data.refresh);
+
+        // Retrieve tokens from local storage
+        const access_token = localStorage.getItem('access_token');
+        const refresh_token = localStorage.getItem('refresh_token');
+
       } else {
         // Display error message
         alert('Invalid username or password.');
